@@ -6,6 +6,44 @@ An automated cloud-native log analysis and security alerting pipeline.
 
 \## 📖 Overview
 
+\## 🏗️ System Architecture
+
+
+
+```mermaid
+
+flowchart LR
+
+&nbsp;   subgraph Data Generation
+
+&nbsp;       A\[Mock Web Server <br> generate.py] -->|Appends JSON| B(server.log)
+
+&nbsp;       B -->|Reads \& Parses| C\[Ingestion Engine <br> ingest.py]
+
+&nbsp;   end
+
+
+
+&nbsp;   subgraph Docker Infrastructure
+
+&nbsp;       C -->|Bulk Insert API| D\[(Elasticsearch)]
+
+&nbsp;       D --- E\[Kibana Dashboard]
+
+&nbsp;   end
+
+
+
+&nbsp;   subgraph Threat Detection
+
+&nbsp;       F\[Security Analyzer <br> detect.py] -->|Queries 401 Errors| D
+
+&nbsp;       F -->|Analyzes Frequency| G{Threat Detected?}
+
+&nbsp;       G -->|> 5 Failed Logins| H((🚨 Alert Admin))
+
+&nbsp;   end
+
 This project simulates a real-world cybersecurity pipeline. It generates mock web server traffic, ingests the logs into an Elasticsearch database in real-time, and uses a custom Python detection engine to identify and flag anomalous behavior (like Brute Force attacks).
 
 
